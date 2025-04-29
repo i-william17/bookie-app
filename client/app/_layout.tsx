@@ -6,6 +6,7 @@ import "react-native-reanimated";
 import { Stack } from "expo-router";
 import { ToastProvider } from "react-native-toast-notifications";
 import { LogBox } from "react-native";
+import { StripeProvider } from "@stripe/stripe-react-native";
 
 export {
   // Catch any errors thrown by the Layout component.

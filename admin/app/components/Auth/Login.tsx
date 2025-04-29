@@ -49,10 +49,10 @@ const Login: FC<Props> = ({ setRoute, setOpen, refetch }) => {
 
   return (
     <div className="w-full">
-      <h1 className={`${styles.title}`}>Login with ELearning</h1>
+      <h1 className={`${styles.title}`}>Login to Bookie Admin</h1>
       <form onSubmit={handleSubmit}>
         <label className={`${styles.label}`} htmlFor="email">
-          Enter your Email
+          Enter your Bookie e-mail
         </label>
         <input
           type="email"
@@ -60,7 +60,7 @@ const Login: FC<Props> = ({ setRoute, setOpen, refetch }) => {
           value={values.email}
           onChange={handleChange}
           id="email"
-          placeholder="loginmail@gmail.com"
+          placeholder="Enter Bookie admin email"
           className={`${errors.email && touched.email && "border-red-500"} ${
             styles.input
           }`}
@@ -78,7 +78,7 @@ const Login: FC<Props> = ({ setRoute, setOpen, refetch }) => {
             value={values.password}
             onChange={handleChange}
             id="password"
-            placeholder="password!@%"
+            placeholder="Enter Bookie admin password"
             className={`${
               errors.password && touched.password && "border-red-500"
             } ${styles.input}`}

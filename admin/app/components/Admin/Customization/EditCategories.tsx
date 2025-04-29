@@ -12,7 +12,7 @@ import { toast } from "react-hot-toast";
 type Props = {};
 
 const EditCategories = (props: Props) => {
-  const { data, isLoading,refetch } = useGetHeroDataQuery("Categories", {
+  const { data, isLoading, refetch } = useGetHeroDataQuery("Categories", {
     refetchOnMountOrArgChange: true,
   });
   const [editLayout, { isSuccess: layoutSuccess, error }] =
@@ -20,11 +20,13 @@ const EditCategories = (props: Props) => {
   const [categories, setCategories] = useState<any>([]);
 
   useEffect(() => {
-    if (data) {
+    if (data && Array.isArray(data?.layout?.categories)) {
       setCategories(data.layout.categories);
+    } else {
+      setCategories([]);
     }
     if (layoutSuccess) {
-        refetch();
+      refetch();
       toast.success("Categories updated successfully");
     }
 
@@ -34,7 +36,7 @@ const EditCategories = (props: Props) => {
         toast.error(errorData?.data?.message);
       }
     }
-  }, [data, layoutSuccess, error,refetch]);
+  }, [data, layoutSuccess, error, refetch]);
 
   const handleCategoriesAdd = (id: any, value: string) => {
     setCategories((prevCategory: any) =>
@@ -43,12 +45,22 @@ const EditCategories = (props: Props) => {
   };
 
   const newCategoriesHandler = () => {
-    if (categories[categories.length - 1].title === "") {
+    if (!Array.isArray(categories)) {
+      setCategories([{ title: "" }]);
+      return;
+    }
+
+    if (categories.length > 0 && categories[categories.length - 1].title === "") {
       toast.error("Category title cannot be empty");
     } else {
-      setCategories((prevCategory: any) => [...prevCategory, { title: "" }]);
+      setCategories((prevCategory: any) => [
+        ...prevCategory,
+        { _id: crypto.randomUUID(), title: "" },
+      ]);
     }
   };
+
+
 
   const areCategoriesUnchanged = (
     originalCategories: any[],
@@ -62,8 +74,10 @@ const EditCategories = (props: Props) => {
   };
 
   const editCategoriesHandler = async () => {
+    const originalCategories = data?.layout?.categories || [];
+
     if (
-      !areCategoriesUnchanged(data.layout.categories, categories) &&
+      !areCategoriesUnchanged(originalCategories, categories) &&
       !isAnyCategoryTitleEmpty(categories)
     ) {
       await editLayout({
@@ -71,6 +85,7 @@ const EditCategories = (props: Props) => {
         categories,
       });
     }
+    
   };
 
   return (
@@ -79,7 +94,7 @@ const EditCategories = (props: Props) => {
         <Loader />
       ) : (
         <div className="mt-[120px] text-center">
-          <h1 className={`${styles.title}`}>All Categories</h1>
+          <h1 className={`${styles.title}`}>Categories</h1>
           {categories &&
             categories.map((item: any, index: number) => {
               return (
@@ -114,19 +129,17 @@ const EditCategories = (props: Props) => {
             />
           </div>
           <div
-            className={`${
-              styles.button
-            } !w-[100px] !min-h-[40px] !h-[40px] dark:text-white text-black bg-[#cccccc34] 
-            ${
-              areCategoriesUnchanged(data.layout.categories, categories) ||
-              isAnyCategoryTitleEmpty(categories)
+            className={`${styles.button
+              } !w-[100px] !min-h-[40px] !h-[40px] dark:text-white text-black bg-[#cccccc34] 
+            ${areCategoriesUnchanged(data?.layouts?.categories, categories) ||
+                isAnyCategoryTitleEmpty(categories)
                 ? "!cursor-not-allowed"
                 : "!cursor-pointer !bg-[#42d383]"
-            }
+              }
             !rounded absolute bottom-12 right-12`}
             onClick={
-              areCategoriesUnchanged(data.layout.categories, categories) ||
-              isAnyCategoryTitleEmpty(categories)
+              areCategoriesUnchanged(data?.layout?.categories, categories) ||
+                isAnyCategoryTitleEmpty(categories)
                 ? () => null
                 : editCategoriesHandler
             }

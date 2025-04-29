@@ -54,7 +54,7 @@ const Signup: FC<Props> = ({ setRoute }) => {
 
   return (
     <div className="w-full">
-      <h1 className={`${styles.title}`}>Join to ELearning</h1>
+      <h1 className={`${styles.title}`}>Create Bookie admin account</h1>
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label className={`${styles.label}`} htmlFor="email">
@@ -66,7 +66,7 @@ const Signup: FC<Props> = ({ setRoute }) => {
             value={values.name}
             onChange={handleChange}
             id="name"
-            placeholder="johndoe"
+            placeholder="Enter your name"
             className={`${errors.name && touched.name && "border-red-500"} ${
               styles.input
             }`}
@@ -84,7 +84,7 @@ const Signup: FC<Props> = ({ setRoute }) => {
           value={values.email}
           onChange={handleChange}
           id="email"
-          placeholder="loginmail@gmail.com"
+          placeholder="Enter valid e-mail address"
           className={`${errors.email && touched.email && "border-red-500"} ${
             styles.input
           }`}
@@ -102,7 +102,7 @@ const Signup: FC<Props> = ({ setRoute }) => {
             value={values.password}
             onChange={handleChange}
             id="password"
-            placeholder="password!@%"
+            placeholder="Enter Bookie Password "
             className={`${
               errors.password && touched.password && "border-red-500"
             } ${styles.input}`}

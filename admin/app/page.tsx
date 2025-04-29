@@ -22,9 +22,9 @@ const Page: FC<Props> = (props) => {
   return (
     <div>
       <Heading
-        title="ELearning - Admin"
-        description="ELearning is a platform for students to learn and get help from teachers"
-        keywords="Prograaming,MERN,Redux,Machine Learning"
+        title="BOOKIE - Admin"
+        description="Bookie is a platform for students to learn and get help from teachers"
+        keywords="Programing,MERN,Redux,Machine Learning"
       />
       <div className="w-[90%] md:w-[420px] m-auto h-screen flex items-center justify-center">
         {route === "Login" && <Login setRoute={setRoute} />}

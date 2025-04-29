@@ -33,13 +33,11 @@ export const Custom: FC<{ children: React.ReactNode }> = ({ children }) => {
 
   return (
     <div>
-      {isLoading ? (
-        <Loader />
-      ) : (
+
         <div>
           <SessionProvider>{children}</SessionProvider>
         </div>
-      )}
+
     </div>
   );
 };

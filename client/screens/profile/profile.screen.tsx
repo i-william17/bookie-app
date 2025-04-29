@@ -32,7 +32,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { router } from "expo-router";
 import { SERVER_URI } from "@/utils/uri";
-import Loader from "@/components/loader/loader";
+//import Loader from "@/components/loader/loader";
 import useUser from "@/hooks/auth/useUser";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 
@@ -81,7 +81,7 @@ export default function ProfileScreen() {
   const pickImage = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== 'granted') {
-      alert('Sorry, we need camera roll permissions to make this work!');
+      alert('Sorry, we need camera permissions to make this work!');
       return;
     }
 
@@ -150,9 +150,7 @@ export default function ProfileScreen() {
     </TouchableOpacity>
   );
 
-  if (loader || loading) {
-    return <Loader />;
-  }
+
 
   return (
     <Animated.View style={[styles.container, { opacity: fadeAnim, transform: [{ scale: scaleAnim }] }]}>

@@ -101,7 +101,7 @@ export default function Header() {
             numberOfLines={1}
             ellipsizeMode="tail"
           >
-            {user?.name || "Guest"}
+            {user?.name }
           </Text>
         </View>
       </View>

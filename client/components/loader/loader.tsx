@@ -11,8 +11,8 @@ export default function Loader() {
       <AnimatedLoader
         visible={true}
         overlayColor="rgba(255,255,255,0.75)"
-        source={require("@/assets/animation/Online data Manager.json")}
-        animationStyle={{ width: 250, height: 250 }}
+        source={require("@/assets/animation/load.json")}
+        animationStyle={{ width: 200, height: 200 }}
         speed={1.5}
       />
     </LinearGradient>

@@ -45,10 +45,10 @@ const CoursePreview: FC<Props> = ({
         </div>
         <div className="flex items-center">
           <h1 className="pt-5 text-[25px]">
-            {courseData?.price === 0 ? "Free" : courseData?.price + "$"}
+            Ksh {courseData?.price === 0 ? "Free" : courseData?.price }
           </h1>
           <h5 className="pl-3 text-[20px] mt-2 line-through opacity-80">
-            {courseData?.estimatedPrice}$
+            Ksh {courseData?.estimatedPrice}
           </h5>
 
           <h4 className="pl-5 pt-4 text-[22px]">
@@ -60,7 +60,7 @@ const CoursePreview: FC<Props> = ({
           <div
             className={`${styles.button} !w-[180px] my-3 font-Poppins !bg-[crimson] cursor-not-allowed`}
           >
-            Buy Now {courseData?.price}$
+            Buy Now Ksh {courseData?.price}
           </div>
         </div>
 

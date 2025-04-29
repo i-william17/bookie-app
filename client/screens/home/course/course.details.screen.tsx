@@ -25,26 +25,47 @@ export default function CourseDetailScreen() {
   const { user, loading } = useUser();
   const [isExpanded, setIsExpanded] = useState(false);
   const { item } = useLocalSearchParams();
-  const courseData: CoursesType = JSON.parse(item as string);
   const [checkPurchased, setCheckPurchased] = useState(false);
+  
+  // Safely parse the course data
+  const [courseData, setCourseData] = useState<CoursesType | null>(null);
+  const [parseError, setParseError] = useState(false);
 
   useEffect(() => {
-    if (user?.courses?.find((i: any) => i._id === courseData?._id)) {
-      setCheckPurchased(true);
+    try {
+      if (item) {
+        const parsedData = JSON.parse(decodeURIComponent(item as string));
+        setCourseData(parsedData);
+      }
+    } catch (error) {
+      console.error("Failed to parse course data:", error);
+      setParseError(true);
     }
-  }, [user]);
+  }, [item]);
+
+  useEffect(() => {
+    if (user?.courses && courseData?._id) {
+      const purchased = user.courses.find((i: any) => i._id === courseData._id);
+      setCheckPurchased(!!purchased);
+    }
+  }, [user, courseData]);
 
   const handleAddToCart = async () => {
-    const existingCartData = await AsyncStorage.getItem("cart");
-    const cartData = existingCartData ? JSON.parse(existingCartData) : [];
-    const itemExists = cartData.some(
-      (item: any) => item._id === courseData._id
-    );
-    if (!itemExists) {
-      cartData.push(courseData);
-      await AsyncStorage.setItem("cart", JSON.stringify(cartData));
+    if (!courseData) return;
+    
+    try {
+      const existingCartData = await AsyncStorage.getItem("cart");
+      const cartData = existingCartData ? JSON.parse(existingCartData) : [];
+      const itemExists = cartData.some((item: any) => item._id === courseData._id);
+      
+      if (!itemExists) {
+        cartData.push(courseData);
+        await AsyncStorage.setItem("cart", JSON.stringify(cartData));
+      }
+      router.push("/(routes)/cart");
+    } catch (error) {
+      console.error("Failed to add to cart:", error);
     }
-    router.push("/(routes)/cart");
   };
 
   let [fontsLoaded, fontError] = useFonts({
@@ -59,6 +80,18 @@ export default function CourseDetailScreen() {
   if (!fontsLoaded && !fontError) {
     return null;
   }
+
+  if (parseError || !courseData) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text>Invalid course data. Please go back.</Text>
+        <TouchableOpacity onPress={() => router.back()}>
+          <Text style={{ color: 'blue', marginTop: 10 }}>Go Back</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
 
   return (
     <>
@@ -119,7 +152,7 @@ export default function CourseDetailScreen() {
                 </View>
               </View>
               <Image
-                source={{ uri: courseData?.thumbnail.url! }}
+                source={{ uri: courseData?.thumbnail?.url! }}
                 style={{ width: "100%", height: 230, borderRadius: 6 }}
               />
             </View>
@@ -152,7 +185,7 @@ export default function CourseDetailScreen() {
                     paddingVertical: 10,
                   }}
                 >
-                  ${courseData?.price}
+                  Ksh {courseData?.price}
                 </Text>
                 <Text
                   style={{
@@ -162,7 +195,7 @@ export default function CourseDetailScreen() {
                     textDecorationLine: "line-through",
                   }}
                 >
-                  ${courseData?.estimatedPrice}
+                  Ksh {courseData?.estimatedPrice}
                 </Text>
               </View>
               <Text style={{ fontSize: 15 }}>
@@ -173,7 +206,7 @@ export default function CourseDetailScreen() {
               <Text style={{ fontSize: 20, fontWeight: "600" }}>
                 Course Prerequisites
               </Text>
-              {courseData?.prerequisites.map(
+              {courseData?.prerequisites?.map(
                 (item: PrerequisiteType, index: number) => (
                   <View
                     key={index}
@@ -195,7 +228,7 @@ export default function CourseDetailScreen() {
               <Text style={{ fontSize: 20, fontWeight: "600" }}>
                 Course Benefits
               </Text>
-              {courseData?.benefits.map((item: BenefitType, index: number) => (
+              {courseData?.benefits?.map((item: BenefitType, index: number) => (
                 <View
                   key={index}
                   style={{
@@ -301,9 +334,9 @@ export default function CourseDetailScreen() {
                 >
                   {isExpanded
                     ? courseData?.description
-                    : courseData?.description.slice(0, 302)}
+                    : courseData?.description?.slice(0, 302)}
                 </Text>
-                {courseData?.description.length > 302 && (
+                {courseData?.description?.length > 302 && (
                   <TouchableOpacity
                     style={{ marginTop: 3 }}
                     onPress={() => setIsExpanded(!isExpanded)}
@@ -346,52 +379,52 @@ export default function CourseDetailScreen() {
               marginBottom: 10,
             }}
           >
-            {checkPurchased === true ? (
-              <TouchableOpacity
+
+            <TouchableOpacity
+              style={{
+                backgroundColor: "#2467EC",
+                paddingVertical: 16,
+                borderRadius: 4,
+              }}
+              onPress={() =>
+                router.push({
+                  pathname: "/(routes)/course-access",
+                  params: { courseData: JSON.stringify(courseData) },
+                })
+              }
+            >
+              <Text
                 style={{
-                  backgroundColor: "#2467EC",
-                  paddingVertical: 16,
-                  borderRadius: 4,
+                  textAlign: "center",
+                  color: "#FFFF",
+                  fontSize: 16,
+                  fontFamily: "Nunito_600SemiBold",
                 }}
-                onPress={() =>
-                  router.push({
-                    pathname: "/(routes)/course-access",
-                    params: { courseData: JSON.stringify(courseData) },
-                  })
-                }
               >
-                <Text
-                  style={{
-                    textAlign: "center",
-                    color: "#FFFF",
-                    fontSize: 16,
-                    fontFamily: "Nunito_600SemiBold",
-                  }}
-                >
-                  Go to the course
-                </Text>
-              </TouchableOpacity>
-            ) : (
-              <TouchableOpacity
-                style={{
-                  backgroundColor: "#2467EC",
-                  paddingVertical: 16,
-                  borderRadius: 4,
-                }}
-                onPress={() => handleAddToCart()}
-              >
-                <Text
-                  style={{
-                    textAlign: "center",
-                    color: "#FFFF",
-                    fontSize: 16,
-                    fontFamily: "Nunito_600SemiBold",
-                  }}
-                >
-                  Add to cart
-                </Text>
-              </TouchableOpacity>
-            )}
+                Go to the course
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={{
+                backgroundColor: "#2467EC",
+                paddingVertical: 16,
+                borderRadius: 4,
+                marginTop: 10,
+              }}
+              onPress={handleAddToCart}
+            >                
+            <Text
+              style={{
+                textAlign: "center",
+                color: "#FFFF",
+                fontSize: 16,
+                fontFamily: "Nunito_600SemiBold",
+              }}
+            >
+                Add to cart
+              </Text>
+            </TouchableOpacity>
           </View>
         </LinearGradient>
       )}

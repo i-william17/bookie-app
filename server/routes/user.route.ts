@@ -24,7 +24,7 @@ userRouter.post("/login", loginUser);
 
 userRouter.get("/logout",isAutheticated, logoutUser);
 
-userRouter.get("/me", getUserInfo);
+userRouter.get("/me", isAutheticated, getUserInfo);
 
 userRouter.post("/social-auth", socialAuth);
 

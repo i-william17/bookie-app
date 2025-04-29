@@ -21,8 +21,9 @@ const CourseInformation: FC<Props> = ({
 
   useEffect(() => {
     if (data) {
-      setCategories(data.layout.categories);
+      setCategories(data?.layout?.categories);
     }
+    console.log(data?.layout?.categories);
   }, [data]);
 
   const handleSubmit = (e: any) => {

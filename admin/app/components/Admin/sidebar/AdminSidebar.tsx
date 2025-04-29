@@ -127,8 +127,8 @@ const AdminSidebar = () => {
                 ml="15px"
               >
                 <Link href="/" className="block">
-                  <h3 className="text-[25px] font-Poppins uppercase dark:text-white text-black">
-                    ELearning
+                  <h3 className="text-[25px] font-Poppins dark:text-white text-black">
+                    Bookie Admin panel
                   </h3>
                 </Link>
                 <IconButton
@@ -148,7 +148,7 @@ const AdminSidebar = () => {
                   alt="profile-user"
                   width={100}
                   height={100}
-                  src={user.avatar ? user.avatar.url : avatarDefault}
+                  src={user?.avatar ? user.avatar.url : avatarDefault}
                   style={{
                     cursor: "pointer",
                     borderRadius: "50%",

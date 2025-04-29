@@ -1,4 +1,9 @@
 {
+  "/favicon.ico/route": "app/favicon.ico/route.js",
   "/page": "app/page.js",
-  "/admin/page": "app/admin/page.js"
+  "/admin/page": "app/admin/page.js",
+  "/admin/users/page": "app/admin/users/page.js",
+  "/admin/team/page": "app/admin/team/page.js",
+  "/admin/create-course/page": "app/admin/create-course/page.js",
+  "/admin/courses/page": "app/admin/courses/page.js"
 }
